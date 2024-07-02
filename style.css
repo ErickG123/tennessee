@@ -1,0 +1,145 @@
+* {
+    margin: 0;
+    padding: 0;
+    border: none;
+    box-sizing: border-box;
+}
+
+.tab {
+    overflow: hidden;
+    border: 1px solid #ccc;
+    background-color: #f1f1f1;
+}
+
+.tab button {
+    background-color: inherit;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 16px;
+    transition: 0.3s;
+}
+
+.tab button:hover {
+    background-color: #ddd;
+}
+
+.tab button.active {
+    background-color: #ccc;
+}
+
+.tabcontent {
+    display: none;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-top: none;
+}
+
+.modal {
+    margin: 16px 0;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.2), 0 4px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.modal-cabecalho {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-cabecalho button {
+    border: 1px solid black;
+    border-radius: 4px;
+    padding: 4px;
+    background: transparent;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.modal-titulo {
+    font-weight: bold;
+    text-transform: capitalize;
+}
+
+.modal img {
+    width: 90vw;
+}
+
+.modal span {
+    font-weight: bold;
+}
+
+.modal-infos {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+.modal-estoque {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0, 0, 0);
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-estoque select,
+.modal-estoque input {
+    border: 1px solid black;
+    border-radius: 4px;
+    padding: 4px;
+    margin-top: 4px;
+    outline: none;
+}
+
+.modal-content {
+    display: flex;
+    flex-direction: column;
+    background-color: #fefefe;
+    margin: 40% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    height: 50%;
+}
+
+.modal-content label {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.divFgEsgotado {
+    display: flex;
+    align-items: center;
+}
+
+.divFgEsgotado input {
+    margin-right: 2px;
+}
+
+.divFgEsgotado label {
+    margin-bottom: 0px;
+}

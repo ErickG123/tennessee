@@ -1,0 +1,13 @@
+Estoque x Estoque_Adicionais
+- Listar
+- Editar
+    - Descrição
+    - Descrição Longa
+    - Valor
+    - Grupo (Combo)
+    - Ativar/Desativar (FG_ESGOTADO)
+
+Banco de Dados:
+- tennessee_dlv.l70cnn0749.mysql.dbaas.com.br
+- tennessee_dlv
+- Com9089112a!
