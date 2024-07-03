@@ -29,6 +29,8 @@
         <button class="tablinks" onclick="openCity(event, 'ESTOQUE_ADICIONAIS')">Estoque Adicionais</button>
     </div>
 
+    <input class="inputPesquisa" type="text" id="searchInput" onkeyup="filterItems()" placeholder="Pesquisar...">
+
     <div id="ESTOQUE" class="tabcontent">
         <?php 
             while ($data_estoque = $stmt_estoque->fetchObject()) {
@@ -188,5 +190,6 @@
 
     <script><?php include("modal-estoque.js"); ?></script>
     <script><?php include("modal-adicionais.js"); ?></script>
+    <script><?php include_once("pesquisa.js"); ?></script>
 </body>
 </html>
