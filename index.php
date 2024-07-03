@@ -5,19 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Controle Estoque</title>
 
-    <link rel="stylesheet" href="<?= 'style.css'; ?>">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <?php 
-        include_once("includes/database.php");
+        include_once("api/database.php");
 
-        $sql_estoque = "SELECT e.codigoproduto, e.descricao, e.descricao_longa, e.valorvendavista, e.fg_esgotado, e.img, g.grupo
+        $sql_estoque = "SELECT e.codigoproduto, e.descricao, e.descricao_longa, e.valorvendavista, e.img, g.grupo
                         FROM estoque e
                         INNER JOIN grupo g ON e.codigodogrupo = g.codigo";
         $stmt_estoque = $conn->prepare($sql_estoque);
         $stmt_estoque->execute();
 
-        $sql_adicionais = "SELECT e.codigodoadicional, e.descricaoadicional, e.valorunitario, e.fg_esgotado, g.grupo
+        $sql_adicionais = "SELECT e.codigodoadicional, e.descricaoadicional, e.valorunitario, g.grupo
                            FROM estoque_adicionais e
                            INNER JOIN grupo g ON e.grupo = g.codigo";
         $stmt_adicionais = $conn->prepare($sql_adicionais);
@@ -31,24 +31,23 @@
 
     <div id="ESTOQUE" class="tabcontent">
         <?php 
-            while ($data = $stmt_estoque->fetchObject()) {
-                $codigoproduto = $data->codigoproduto;
-                $descricao = $data->descricao;
-                $descricao_longa = $data->descricao_longa;
-                $valorvendavista = $data->valorvendavista;
-                $img = $data->img;
-                $grupo = $data->grupo;
-                $fg_esgotado = $data->fg_esgotado;
+            while ($data_estoque = $stmt_estoque->fetchObject()) {
+                $codigoproduto = $data_estoque->codigoproduto;
+                $descricao = $data_estoque->descricao;
+                $descricao_longa = $data_estoque->descricao_longa;
+                $valorvendavista = $data_estoque->valorvendavista;
+                $img = $data_estoque->img;
+                $grupo = $data_estoque->grupo;
         ?>
-            <div class="modal">
-                <div class="modal-cabecalho">
-                    <p class="modal-titulo"><?= $descricao; ?></p>
-                    <button class="btnModalEstoque">Editar</button>
+            <div class="card">
+                <div class="card-cabecalho">
+                    <p class="card-titulo"><?= $descricao; ?></p>
+                    <button class="btnModalEstoque" data-id="<?= $codigoproduto; ?>">Editar</button>
                 </div>
                 <img src="imagem_not_available.jpg" alt="Imagem Produto">
                 <p><span>Descrição Longa:</span> <?= $descricao_longa; ?></p>
-                <div class="modal-infos">
-                    <p><span>Valor:</span> <?= $valorvendavista; ?></p>
+                <div class="card-infos">
+                    <p><span>Valor:</span> <?= "R$ " . number_format($valorvendavista, 2, ",", "."); ?></p>
                     <p><span>Grupo:</span> <?= $grupo; ?></p>
                 </div>
             </div>
@@ -57,22 +56,20 @@
 
     <div id="ESTOQUE_ADICIONAIS" class="tabcontent">
         <?php 
-            while ($data = $stmt_adicionais->fetchObject()) {
-                $codigodoadicional = $data->codigodoadicional;
-                $descricaoadicional = $data->descricaoadicional;
-                $valorunitario = $data->valorunitario;
-                $grupo = $data->grupo;
-                $fg_esgotado = $data->fg_esgotado;
+            while ($data_adicionais = $stmt_adicionais->fetchObject()) {
+                $codigodoadicional = $data_adicionais->codigodoadicional;
+                $descricaoadicional = $data_adicionais->descricaoadicional;
+                $valorunitario = $data_adicionais->valorunitario;
+                $grupo = $data_adicionais->grupo;
         ?>
-            <div class="modal">
-                <div class="modal-cabecalho">
-                    <p class="modal-titulo"><?= $descricao; ?></p>
-                    <button>Editar</button>
+            <div class="card">
+                <div class="card-cabecalho">
+                    <p class="card-titulo"><?= $descricaoadicional; ?></p>
+                    <button class="btnModalAdicionais" data-id="<?= $codigodoadicional; ?>">Editar</button>
                 </div>
                 <img src="imagem_not_available.jpg" alt="Imagem Produto">
-                <p><span>Descrição Longa:</span> <?= $descricaoadicional; ?></p>
-                <div class="modal-infos">
-                    <p><span>Valor:</span> <?= $valorunitario; ?></p>
+                <div class="card-infos">
+                    <p><span>Valor:</span> <?= "R$ " . number_format($valorunitario, 2, ",", "."); ?></p>
                     <p><span>Grupo:</span> <?= $grupo; ?></p>
                 </div>
             </div>
@@ -81,46 +78,96 @@
 
     <div id="modalEstoque" class="modal-estoque">
         <div class="modal-content">
-            <span class="close">&times;</span>
+            <span id="btnFecharModalEstoque">X</span>
 
-            <label for="descricao">
-                Descrição:
-                <input type="text" name="descricao">
-            </label>
+            <form action="api/atualizar-estoque.php" method="post">
+                <label for="descricao">
+                    Descrição:
+                    <input type="text" name="descricao">
+                </label>
 
-            <label for="descricao_longa">
-                Descrição Longa:
-                <input type="text" name="descricao_longa">
-            </label>
+                <label for="descricao_longa">
+                    Descrição Longa:
+                    <input type="text" name="descricao_longa">
+                </label>
 
-            <label for="valorvendavista">
-                Valor:
-                <input type="text" name="valorvendavista">
-            </label>
+                <label for="valorvendavista">
+                    Valor:
+                    <input type="number" step="0.01" name="valorvendavista">
+                </label>
 
-            <label for="grupo">
-                Grupo:
-                <select name="grupo" id="grupo">
-                    <?php 
-                        $sql_grupo = "SELECT codigo, grupo
-                                    FROM grupo";
-                        $stmt_grupo = $conn->query($sql_grupo);
-                        $grupos = $stmt_grupo->fetchAll(PDO::FETCH_ASSOC);
+                <label for="grupo">
+                    Grupo:
+                    <select name="grupo" id="grupo">
+                        <?php 
+                            $sql_grupo = "SELECT codigo, grupo
+                                          FROM grupo";
+                            $stmt_grupo = $conn->query($sql_grupo);
+                            $grupos = $stmt_grupo->fetchAll(PDO::FETCH_ASSOC);
 
-                        foreach ($grupos as $grupo) {  
-                    ?>
-                        <option value="<?= $grupo["codigo"]; ?>"><?= $grupo["grupo"]; ?></option>
-                    <?php } ?>
-                </select>
-            </label>
-            
-            <div class="divFgEsgotado">
-                <input type="checkbox" name="<?= $fg_esgotado == 0 ? 'desativar' : 'ativar'; ?>" id="input<?= $fg_esgotado == 0 ? 'Desativar' : 'Ativar'; ?>">
-                <label for="<?= $fg_esgotado == 0 ? 'desativar' : 'ativar'; ?>"><?= $fg_esgotado == 0 ? 'Desativar' : 'Ativar'; ?></label>
-            </div>
+                            foreach ($grupos as $grupo) {  
+                        ?>
+                            <option value="<?= $grupo["codigo"]; ?>"><?= $grupo["grupo"]; ?></option>
+                        <?php } ?>
+                    </select>
+                </label>
+                
+                <div class="divFgEsgotado">
+                    <input type="checkbox" name="fg_esgotado" id="fg_esgotado">
+                    <label id="labelEstoque" for="fg_esgotado"></label>
+                </div>
+
+                <input type="hidden" name="codigoproduto">
+
+                <button type="submit">Atualizar</button>
+            </form>
         </div>
     </div>
 
-    <script><?php include("script.js"); ?></script>
+    <div id="modalAdicionais" class="modal-estoque">
+        <div class="modal-content">
+            <span id="btnFecharModalAdicionais">X</span>
+
+            <form action="api/atualizar-adicionais.php" method="post">
+                <label for="descricaoadicional">
+                    Descrição:
+                    <input type="text" name="descricaoadicional">
+                </label>
+
+                <label for="valorunitario">
+                    Valor:
+                    <input type="number" step="0.01" name="valorunitario">
+                </label>
+
+                <label for="grupo">
+                    Grupo:
+                    <select name="grupo" id="grupo">
+                        <?php 
+                            $sql_grupo = "SELECT codigo, grupo
+                                          FROM grupo";
+                            $stmt_grupo = $conn->query($sql_grupo);
+                            $grupos = $stmt_grupo->fetchAll(PDO::FETCH_ASSOC);
+
+                            foreach ($grupos as $grupo) {  
+                        ?>
+                            <option value="<?= $grupo["codigo"]; ?>"><?= $grupo["grupo"]; ?></option>
+                        <?php } ?>
+                    </select>
+                </label>
+
+                <div class="divFgEsgotado">
+                    <input type="checkbox" name="fg_esgotado_adicionais" id="fg_esgotado_adicionais">
+                    <label id="labelAdicionais" for="fg_esgotado_adicionais"></label>
+                </div>
+
+                <input type="hidden" name="codigodoadicional">
+
+                <button type="submit">Atualizar</button>
+            </form>
+        </div>
+    </div>
+
+    <script><?php include("modal-estoque.js"); ?></script>
+    <script><?php include("modal-adicionais.js"); ?></script>
 </body>
 </html>
