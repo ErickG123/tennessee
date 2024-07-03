@@ -3,7 +3,7 @@
 
   $codigodoadicional = $_GET["codigodoadicional"];
 
-  $sql = "SELECT e.codigodoadicional, e.descricaoadicional, e.valorunitario, e.fg_esgotado, g.codigo, g.grupo
+  $sql = "SELECT e.codigodoadicional, e.descricaoadicional, e.valorunitario, e.fg_esgotado, e.img, g.codigo, g.grupo
           FROM estoque_adicionais e
           INNER JOIN grupo g ON e.grupo = g.codigo
           WHERE e.codigodoadicional = :codigodoadicional";

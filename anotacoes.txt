@@ -11,3 +11,7 @@ Banco de Dados:
 - tennessee_dlv.l70cnn0749.mysql.dbaas.com.br
 - tennessee_dlv
 - Com9089112a!
+
+SQL Banco:
+ALTER TABLE estoque_adicionais
+ADD COLUMN IMG MEDIUMTEXT NOT NULL;

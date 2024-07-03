@@ -17,7 +17,7 @@
         $stmt_estoque = $conn->prepare($sql_estoque);
         $stmt_estoque->execute();
 
-        $sql_adicionais = "SELECT e.codigodoadicional, e.descricaoadicional, e.valorunitario, g.grupo
+        $sql_adicionais = "SELECT e.codigodoadicional, e.descricaoadicional, e.valorunitario, e.img, g.grupo
                            FROM estoque_adicionais e
                            INNER JOIN grupo g ON e.grupo = g.codigo";
         $stmt_adicionais = $conn->prepare($sql_adicionais);
@@ -44,7 +44,11 @@
                     <p class="card-titulo"><?= $descricao; ?></p>
                     <button class="btnModalEstoque" data-id="<?= $codigoproduto; ?>">Editar</button>
                 </div>
-                <img src="imagem_not_available.jpg" alt="Imagem Produto">
+                <?php if ($img): ?>
+                    <img src="data:image/jpeg;base64,<?= $img; ?>" alt="<?= "imagem_$descricao" ?>">
+                <?php else: ?>
+                    <img src="imagem_not_available.jpg" alt="Imagem Indisponível">
+                <?php endif; ?>
                 <p><span>Descrição Longa:</span> <?= $descricao_longa; ?></p>
                 <div class="card-infos">
                     <p><span>Valor:</span> <?= "R$ " . number_format($valorvendavista, 2, ",", "."); ?></p>
@@ -60,6 +64,7 @@
                 $codigodoadicional = $data_adicionais->codigodoadicional;
                 $descricaoadicional = $data_adicionais->descricaoadicional;
                 $valorunitario = $data_adicionais->valorunitario;
+                $img = $data_adicionais->img;
                 $grupo = $data_adicionais->grupo;
         ?>
             <div class="card">
@@ -67,7 +72,11 @@
                     <p class="card-titulo"><?= $descricaoadicional; ?></p>
                     <button class="btnModalAdicionais" data-id="<?= $codigodoadicional; ?>">Editar</button>
                 </div>
-                <img src="imagem_not_available.jpg" alt="Imagem Produto">
+                <?php if ($img): ?>
+                    <img src="data:image/jpeg;base64,<?= $img; ?>" alt="<?= "imagem_$descricao" ?>">
+                <?php else: ?>
+                    <img src="imagem_not_available.jpg" alt="Imagem Indisponível">
+                <?php endif; ?>
                 <div class="card-infos">
                     <p><span>Valor:</span> <?= "R$ " . number_format($valorunitario, 2, ",", "."); ?></p>
                     <p><span>Grupo:</span> <?= $grupo; ?></p>
@@ -80,7 +89,7 @@
         <div class="modal-content">
             <span id="btnFecharModalEstoque">X</span>
 
-            <form action="api/atualizar-estoque.php" method="post">
+            <form action="api/atualizar-estoque.php" method="post" enctype="multipart/form-data">
                 <label for="descricao">
                     Descrição:
                     <input type="text" name="descricao">
@@ -111,6 +120,11 @@
                         <?php } ?>
                     </select>
                 </label>
+
+                <label for="imagem">
+                    Imagem:
+                    <input type="file" name="imagem" id="imagem">
+                </label>
                 
                 <div class="divFgEsgotado">
                     <input type="checkbox" name="fg_esgotado" id="fg_esgotado">
@@ -128,7 +142,7 @@
         <div class="modal-content">
             <span id="btnFecharModalAdicionais">X</span>
 
-            <form action="api/atualizar-adicionais.php" method="post">
+            <form action="api/atualizar-adicionais.php" method="post" enctype="multipart/form-data">
                 <label for="descricaoadicional">
                     Descrição:
                     <input type="text" name="descricaoadicional">
@@ -153,6 +167,11 @@
                             <option value="<?= $grupo["codigo"]; ?>"><?= $grupo["grupo"]; ?></option>
                         <?php } ?>
                     </select>
+                </label>
+
+                <label for="imagem">
+                    Imagem:
+                    <input type="file" name="imagem" id="imagem">
                 </label>
 
                 <div class="divFgEsgotado">
